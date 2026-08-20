@@ -1,0 +1,11 @@
+{
+  "name": "daggerhartlab/daglab-stage-file-proxy",
+  "description": "WordPress plugin for local dev.",
+  "type": "wordpress-plugin",
+  "authors": [
+    {
+      "name": "Jonathan Daggerhart",
+      "email": "jonathan@daggerhart.com"
+    }
+  ]
+}
