@@ -7,5 +7,10 @@
       "name": "Jonathan Daggerhart",
       "email": "jonathan@daggerhart.com"
     }
-  ]
+  ],
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true
+    }
+  }
 }
