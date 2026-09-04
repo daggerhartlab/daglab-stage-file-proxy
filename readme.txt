@@ -3,7 +3,7 @@ Contributors: daggerhart
 Tags: development, uploads
 Requires at least: 3.7
 Tested up to: 7.1
-Stable tag: 0.0.3
+Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,7 +21,7 @@ This plugin is used on development sites ONLY to automatically download missing 
 
 == Changelog ==
 
-= 0.0.3 =
+= 0.2.0 =
 * Corrected plugin version numbers
 * Tested up to 7.1
 * Added .editorconfig and cleaned up spacing
@@ -32,3 +32,8 @@ This plugin is used on development sites ONLY to automatically download missing 
 * Small refactor into `includes` directory
 * Improved logic around which requests we should act on and how we handle request data
 * Fixed issues with handling of year/month folders
+
+= 0.1.0 =
+* Forked repo from https://wordpress.org/plugins/stage-file-proxy/
+* Added Composer integration
+* Added support for SVG
