@@ -97,7 +97,10 @@ function stage_file_proxy_section_1_callback() {
 function stage_file_proxy_source_domain_callback() {
 	$settings = (array) get_option('stage-file-proxy-settings');
 	$field = "source_domain";
-	$value = esc_attr($settings[$field]);
+	$value = '';
+	if (!empty($settings[$field])) {
+		$value = esc_attr($settings[$field]);
+	}
 
 	echo "<input type='text' name='stage-file-proxy-settings[$field]' value='$value' />";
 }
@@ -109,8 +112,11 @@ function stage_file_proxy_source_domain_callback() {
  */
 function stage_file_proxy_method_callback() {
 	$settings = (array) get_option('stage-file-proxy-settings');
-	$field    = "method";
-	$value    = esc_attr($settings[$field]);
+	$field = "method";
+	$value = '';
+	if (!empty($settings[$field])) {
+		$value = esc_attr($settings[$field]);
+	}
 	?>
 	<select name="stage-file-proxy-settings[method]">
 		<option value="download" <?php selected($value, 'download') ?>>Download</option>
