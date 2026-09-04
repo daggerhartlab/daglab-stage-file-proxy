@@ -6,7 +6,7 @@
  * Author:          daggerhart
  * Author URI:      https://www.daggerhartlab.com
  * Text Domain:     stage-file-proxy
- * Version:         0.1.0
+ * Version:         0.0.3
  *
  * @package         Stage_File_Proxy
  */
