@@ -2,7 +2,7 @@
 /**
  * Plugin Name:     DagLab - Stage File Proxy
  * Plugin URI:      https://github.com/daggerhartlab/daglab-stage-file-proxy
- * Description:     The easiest way to handle the uploads folder for WordPress during development. This plugin will automatically download files from the production site uploads folder on demand. This plugin IS NOT meant for use on production websites.
+ * Description:     Proxies files from the production site uploads folder on demand. *NOT meant for use on production websites.*
  * Author:          daggerhart
  * Author URI:      https://www.daggerhartlab.com
  * Text Domain:     stage-file-proxy
@@ -18,7 +18,13 @@ add_action( 'admin_menu', 'stage_file_proxy_menu' );
  * @return void
  */
 function stage_file_proxy_menu() {
-	add_options_page(__('Stage File Proxy Options', 'stage-file-proxy'), __('Stage File Proxy Options', 'stage-file-proxy'), 'manage_options', 'stage-file-proxy', 'stage_file_proxy_options_page');
+	add_options_page(
+		__('Stage File Proxy Options', 'stage-file-proxy'),
+		__('Stage File Proxy Options', 'stage-file-proxy'),
+		'manage_options',
+		'stage-file-proxy',
+		'stage_file_proxy_options_page'
+	);
 }
 
 add_action( 'admin_init', 'stage_file_proxy_init' );
@@ -28,10 +34,31 @@ add_action( 'admin_init', 'stage_file_proxy_init' );
  * @return void
  */
 function stage_file_proxy_init() {
-	register_setting( 'stage-file-proxy-group', 'stage-file-proxy-settings', 'stage_file_proxy_settings_validate_and_sanitize' );
-	add_settings_section( 'section-1', __( 'Source Domain', 'stage-file-proxy' ), 'section_1_callback', 'stage-file-proxy' );
-	add_settings_field( 'field-1-1', __( 'Source Domain', 'stage-file-proxy' ), 'source_domain_callback', 'stage-file-proxy', 'section-1' );
-	add_settings_field( 'field-1-2', __( 'Method', 'select' ), 'method_callback', 'stage-file-proxy', 'section-1' );
+	register_setting(
+		'stage-file-proxy-group',
+		'stage-file-proxy-settings',
+		'stage_file_proxy_settings_validate_and_sanitize'
+	);
+	add_settings_section(
+		'section-1',
+		__( 'Source Domain', 'stage-file-proxy' ),
+		'stage_file_proxy_section_1_callback',
+		'stage-file-proxy'
+	);
+	add_settings_field(
+		'field-1-1',
+		__( 'Source Domain', 'stage-file-proxy' ),
+		'stage_file_proxy_source_domain_callback',
+		'stage-file-proxy',
+		'section-1'
+	);
+	add_settings_field(
+		'field-1-2',
+		__( 'Method', 'select' ),
+		'stage_file_proxy_method_callback',
+		'stage-file-proxy',
+		'section-1'
+	);
 }
 
 /**
@@ -55,8 +82,11 @@ function stage_file_proxy_options_page() {
  *
  * @return void
  */
-function section_1_callback() {
-	_e('Please enter the domain where the source images are location (for example, http://www.daggerhartlab.com).', 'stage-file-proxy');
+function stage_file_proxy_section_1_callback() {
+	_e(
+		'Please enter the domain where the source images are location (for example, http://www.daggerhartlab.com).',
+		'stage-file-proxy'
+	);
 }
 
 /**
@@ -64,7 +94,7 @@ function section_1_callback() {
  *
  * @return void
  */
-function source_domain_callback() {
+function stage_file_proxy_source_domain_callback() {
 	$settings = (array) get_option('stage-file-proxy-settings');
 	$field = "source_domain";
 	$value = esc_attr($settings[$field]);
@@ -77,7 +107,7 @@ function source_domain_callback() {
  *
  * @return void
  */
-function method_callback() {
+function stage_file_proxy_method_callback() {
 	$settings = (array) get_option('stage-file-proxy-settings');
 	$field    = "method";
 	$value    = esc_attr($settings[$field]);
@@ -101,7 +131,11 @@ function stage_file_proxy_settings_validate_and_sanitize( $input ) {
 		$output['source_domain'] = trim($input['source_domain']);
 	}
 	else {
-		add_settings_error('stage-file-proxy-settings', 'invalid-source_domain', 'Please enter a valid domain.');
+		add_settings_error(
+			'stage-file-proxy-settings',
+			'invalid-source_domain',
+			'Please enter a valid domain.'
+		);
 	}
 	$output['method'] = trim($input['method']);
 
