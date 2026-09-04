@@ -26,39 +26,43 @@ function stage_file_proxy_404(){
 	}
 
 	$settings = (array) get_option('stage-file-proxy-settings');
-	if (isset($settings['source_domain']) && $settings['source_domain'] <> '') {
-		if (substr($settings['source_domain'], - 1) == '/') {
-			$settings['source_domain'] = substr($settings['source_domain'], 0, - 1);
-		}
-		$source = $settings['source_domain'] . $_SERVER['REQUEST_URI'];
+	if (empty($settings['source_domain'])) {
+		return;
+	}
 
-		if ($settings['method'] == 'redirect') {
-			header("Location: " . $source);
+	$domain = untrailingslashit($settings['source_domain']);
+	$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+	$source = $domain . $path;
+
+	// Handling redirect case.
+	if ($settings['method'] == 'redirect') {
+		header("Location: " . $source);
+		exit;
+	}
+
+	// Handling download case.
+	$parts = explode('/', $_SERVER['REQUEST_URI']);
+
+	// The post date is used in `wp_upload_bits` to determine which directory
+	// the file should go in. If the site doesn't use year/month directories
+	// for uploads, then it should be null.
+	$post_date = null;
+	if (isset($parts[3], $parts[4])) {
+		$post_date = "{$parts[3]}/{$parts[4]}";
+	}
+
+	if ($file = file_get_contents($source)) {
+		// Daglab - we added this for svgs, but maybe there's a better way since
+		//  we have the safe_svg plugin :shrug:.
+		add_filter('upload_mimes', function($t, $user) {
+			$t['svg'] = "image/svg+xml";
+			return $t;
+		}, 10, 2);
+		// End DagLab
+
+		$upload = wp_upload_bits(basename($_SERVER['REQUEST_URI']), NULL, $file, $post_date);
+		if (wp_redirect($upload['url'] . '?stage_file_proxy=true')) {
 			exit;
-		}
-		$parts = explode('/', $_SERVER['REQUEST_URI']);
-
-		// The post date is used in `wp_upload_bits` to determine which directory
-		// the file should go in. If the site doesn't use year/month directories
-		// for uploads, then it should be null.
-		$post_date = null;
-		if (isset($parts[3], $parts[4])) {
-			$post_date = "{$parts[3]}/{$parts[4]}";
-		}
-
-		if ($file = file_get_contents($source)) {
-			// Daglab - we added this for svgs, but maybe there's a better way since
-			//  we have the safe_svg plugin :shrug:.
-			add_filter('upload_mimes', function($t, $user) {
-				$t['svg'] = "image/svg+xml";
-				return $t;
-			}, 10, 2);
-			// End DagLab
-
-			$upload = wp_upload_bits(basename($_SERVER['REQUEST_URI']), NULL, $file, $post_date);
-			if (wp_redirect($upload['url'] . '?stage_file_proxy=true')) {
-				exit;
-			}
 		}
 	}
 }
