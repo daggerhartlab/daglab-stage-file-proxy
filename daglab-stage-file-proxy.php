@@ -2,7 +2,7 @@
 /**
  * Plugin Name:     DagLab - Stage File Proxy
  * Plugin URI:      https://github.com/daggerhartlab/daglab-stage-file-proxy
- * Description:     The easiest way to handle the uploads folder for Wordpress during development. This plugin will automatically download files from the production site uploads folder on demand. This plugin IS NOT meant for use on production websites.
+ * Description:     The easiest way to handle the uploads folder for WordPress during development. This plugin will automatically download files from the production site uploads folder on demand. This plugin IS NOT meant for use on production websites.
  * Author:          daggerhart
  * Author URI:      https://www.daggerhartlab.com
  * Text Domain:     stage-file-proxy
@@ -18,7 +18,7 @@ add_action( 'admin_menu', 'stage_file_proxy_menu' );
  * @return void
  */
 function stage_file_proxy_menu() {
-	add_options_page(__('Stage File Proxy Options', 'textdomain'), __('Stage File Proxy Options', 'textdomain'), 'manage_options', 'stage-file-proxy', 'stage_file_proxy_options_page');
+	add_options_page(__('Stage File Proxy Options', 'stage-file-proxy'), __('Stage File Proxy Options', 'stage-file-proxy'), 'manage_options', 'stage-file-proxy', 'stage_file_proxy_options_page');
 }
 
 add_action( 'admin_init', 'stage_file_proxy_init' );
@@ -29,8 +29,8 @@ add_action( 'admin_init', 'stage_file_proxy_init' );
  */
 function stage_file_proxy_init() {
 	register_setting( 'stage-file-proxy-group', 'stage-file-proxy-settings', 'stage_file_proxy_settings_validate_and_sanitize' );
-	add_settings_section( 'section-1', __( 'Source Domain', 'textdomain' ), 'section_1_callback', 'stage-file-proxy' );
-	add_settings_field( 'field-1-1', __( 'Source Domain', 'textdomain' ), 'source_domain_callback', 'stage-file-proxy', 'section-1' );
+	add_settings_section( 'section-1', __( 'Source Domain', 'stage-file-proxy' ), 'section_1_callback', 'stage-file-proxy' );
+	add_settings_field( 'field-1-1', __( 'Source Domain', 'stage-file-proxy' ), 'source_domain_callback', 'stage-file-proxy', 'section-1' );
 	add_settings_field( 'field-1-2', __( 'Method', 'select' ), 'method_callback', 'stage-file-proxy', 'section-1' );
 }
 
@@ -40,7 +40,7 @@ function stage_file_proxy_init() {
 function stage_file_proxy_options_page() {
 	?>
 	<div class="wrap">
-		<h2><?php _e('Stage File Proxy Options', 'textdomain'); ?></h2>
+		<h2><?php _e('Stage File Proxy Options', 'stage-file-proxy'); ?></h2>
 		<form action="options.php" method="POST">
 			<?php settings_fields('stage-file-proxy-group'); ?>
 			<?php do_settings_sections('stage-file-proxy'); ?>
@@ -56,7 +56,7 @@ function stage_file_proxy_options_page() {
  * @return void
  */
 function section_1_callback() {
-	_e('Please enter the domain where the source images are location (for example, http://www.daggerhartlab.com).', 'textdomain');
+	_e('Please enter the domain where the source images are location (for example, http://www.daggerhartlab.com).', 'stage-file-proxy');
 }
 
 /**
