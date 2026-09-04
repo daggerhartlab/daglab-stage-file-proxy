@@ -21,12 +21,7 @@ add_action( 'template_redirect', 'stage_file_proxy_404' );
  * @return void
  */
 function stage_file_proxy_404(){
-	// We only care about 404s.
-	if (!is_404()) {
-		return;
-	}
-	// Ignore if we've already processed the request.
-	if (isset($_REQUEST['stage_file_proxy'])) {
+	if (!stage_file_proxy_should_act_on_current_request()) {
 		return;
 	}
 
