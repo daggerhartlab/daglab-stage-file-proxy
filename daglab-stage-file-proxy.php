@@ -21,34 +21,41 @@ add_action( 'template_redirect', 'stage_file_proxy_404' );
  * @return void
  */
 function stage_file_proxy_404(){
-	if (is_404() && !isset($_REQUEST['stage_file_proxy'])) {
-		$settings = (array) get_option('stage-file-proxy-settings');
-		if (isset($settings['source_domain']) && $settings['source_domain'] <> '') {
-			if (substr($settings['source_domain'], - 1) == '/') {
-				$settings['source_domain'] = substr($settings['source_domain'], 0, - 1);
-			}
-			$source = $settings['source_domain'] . $_SERVER['REQUEST_URI'];
+	// We only care about 404s.
+	if (!is_404()) {
+		return;
+	}
+	// Ignore if we've already processed the request.
+	if (isset($_REQUEST['stage_file_proxy'])) {
+		return;
+	}
 
-			if ($settings['method'] == 'redirect') {
-				header("Location: " . $source);
+	$settings = (array) get_option('stage-file-proxy-settings');
+	if (isset($settings['source_domain']) && $settings['source_domain'] <> '') {
+		if (substr($settings['source_domain'], - 1) == '/') {
+			$settings['source_domain'] = substr($settings['source_domain'], 0, - 1);
+		}
+		$source = $settings['source_domain'] . $_SERVER['REQUEST_URI'];
+
+		if ($settings['method'] == 'redirect') {
+			header("Location: " . $source);
+			exit;
+		}
+		$parts = explode('/', $_SERVER['REQUEST_URI']);
+		$post_date = "{$parts[3]}-{$parts[4]}-01";
+
+		if ($file = file_get_contents($source)) {
+			// Daglab - we added this for svgs, but maybe there's a better way since
+			//  we have the safe_svg plugin :shrug:.
+			add_filter('upload_mimes', function($t, $user) {
+				$t['svg'] = "image/svg+xml";
+				return $t;
+			}, 10, 2);
+			// End DagLab
+
+			$upload = wp_upload_bits(basename($_SERVER['REQUEST_URI']), NULL, $file, $post_date);
+			if (wp_redirect($upload['url'] . '?stage_file_proxy=true')) {
 				exit;
-			}
-			$parts = explode('/', $_SERVER['REQUEST_URI']);
-			$post_date = "{$parts[3]}-{$parts[4]}-01";
-
-			if ($file = file_get_contents($source)) {
-				// Daglab - we added this for svgs, but maybe there's a better way since
-				//  we have the safe_svg plugin :shrug:.
-				add_filter('upload_mimes', function($t, $user) {
-					$t['svg'] = "image/svg+xml";
-					return $t;
-				}, 10, 2);
-				// End DagLab
-
-				$upload = wp_upload_bits(basename($_SERVER['REQUEST_URI']), NULL, $file, $post_date);
-				if (wp_redirect($upload['url'] . '?stage_file_proxy=true')) {
-					exit;
-				}
 			}
 		}
 	}
