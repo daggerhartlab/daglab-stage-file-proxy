@@ -37,7 +37,14 @@ function stage_file_proxy_404(){
 			exit;
 		}
 		$parts = explode('/', $_SERVER['REQUEST_URI']);
-		$post_date = "{$parts[3]}-{$parts[4]}-01";
+
+		// The post date is used in `wp_upload_bits` to determine which directory
+		// the file should go in. If the site doesn't use year/month directories
+		// for uploads, then it should be null.
+		$post_date = null;
+		if (isset($parts[3], $parts[4])) {
+			$post_date = "{$parts[3]}/{$parts[4]}";
+		}
 
 		if ($file = file_get_contents($source)) {
 			// Daglab - we added this for svgs, but maybe there's a better way since
