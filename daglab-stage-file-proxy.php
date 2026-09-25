@@ -6,14 +6,27 @@
  * Author:          daggerhart
  * Author URI:      https://www.daggerhartlab.com
  * Text Domain:     stage-file-proxy
- * Version:         0.2.0
+ * Version:         0.3.0
  *
  * @package         Stage_File_Proxy
  */
 
-foreach (glob(__DIR__ . '/includes/*.php') as $filename) {
-	require_once $filename;
+stage_file_proxy_includes();
+/**
+ * Include files needed by the plugin.
+ *
+ * @return void
+ */
+function stage_file_proxy_includes() {
+	$includes = array_merge(
+		glob(__DIR__ . '/includes/*.php'),
+		glob(__DIR__ . '/includes/*/*.php'),
+	);
+	foreach ($includes as $filename) {
+		require_once $filename;
+	}
 }
+
 
 add_action( 'template_redirect', 'stage_file_proxy_404' );
 /**
