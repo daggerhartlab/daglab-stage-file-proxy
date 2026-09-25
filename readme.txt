@@ -3,7 +3,7 @@ Contributors: daggerhart
 Tags: development, uploads
 Requires at least: 3.7
 Tested up to: 7.1
-Stable tag: 0.2.0
+Stable tag: 0.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,6 +20,9 @@ This plugin is used on development sites ONLY to automatically download missing 
 3. Make sure that the box for "Organize my uploads into month- and year-based folders" on the "Media Settings" page matches the production website. This controls the location that the file will be downloaded to within the uploads folders.
 
 == Changelog ==
+
+= 0.3.0 =
+* Adding support for "Fly Dynamic Image Resizer" plugin compatibility
 
 = 0.2.0 =
 * Corrected plugin version numbers
