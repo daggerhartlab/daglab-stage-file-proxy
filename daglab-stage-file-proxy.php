@@ -64,7 +64,15 @@ function stage_file_proxy_404(){
 		$post_date = "{$parts[3]}/{$parts[4]}";
 	}
 
-	if ($file = file_get_contents($source)) {
+	// Use the WP HTTP API; file_get_contents() requests get blocked by some
+	// CDNs/WAFs (e.g. Cloudflare returns a 403).
+	$response = wp_remote_get($source, ['timeout' => 30]);
+	$file = null;
+	if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {
+		$file = wp_remote_retrieve_body($response);
+	}
+
+	if ($file) {
 		// Daglab - we added this for svgs, but maybe there's a better way since
 		//  we have the safe_svg plugin :shrug:.
 		add_filter('upload_mimes', function($t, $user) {
